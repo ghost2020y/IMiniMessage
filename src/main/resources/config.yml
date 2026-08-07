@@ -1,0 +1,5 @@
+# Allow conversion of Legacy format (&a, &c, &#rrggbb) to MiniMessage tags before processing
+convert-legacy: true
+
+# Process only lines containing tags (MiniMessage or converted Legacy)
+parse-only-with-tags: true

@@ -1,0 +1,7 @@
+name: IMiniMessage
+main: me.zortex.iminimessage.IMiniMessage
+version: ${version}
+api-version: 1.21
+authors: [ghost2020y]
+description: Global MiniMessage interceptor using PacketEvents
+depend: [packetevents]
