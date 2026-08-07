@@ -17,12 +17,15 @@ dependencies {
 }
 
 val targetJavaVersion = 17
+val buildJavaVersion = 25
+
 java {
-    val version = JavaVersion.toVersion(25)
-    sourceCompatibility = version
-    targetCompatibility = version
-    if (JavaVersion.current() < version) {
-        toolchain.languageVersion = JavaLanguageVersion.of(25)
+    val buildVersion = JavaVersion.toVersion(buildJavaVersion)
+    sourceCompatibility = buildVersion
+    targetCompatibility = buildVersion
+
+    if (JavaVersion.current() < buildVersion) {
+        toolchain.languageVersion.set(JavaLanguageVersion.of(buildJavaVersion))
     }
 
     disableAutoTargetJvm()
@@ -30,17 +33,13 @@ java {
 
 tasks.withType<JavaCompile>().configureEach {
     options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible) {
-        options.release.set(targetJavaVersion)
-    }
+    options.release.set(targetJavaVersion)
 }
 
-tasks {
-    processResources {
-        filesMatching("plugin.yml") {
-            expand("version" to project.version)
+tasks.processResources {
+    filesMatching("plugin.yml") {
+        expand("version" to project.version)
 
-            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-        }
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }
