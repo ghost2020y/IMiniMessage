@@ -2,10 +2,12 @@ package me.zortex.iminimessage.listener;
 
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
+import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
+import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisguisedChat;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage;
 import me.zortex.iminimessage.processor.ComponentProcessor;
-import net.kyori.adventure.text.Component;
 
 public class PacketListener extends PacketListenerAbstract {
 
@@ -19,10 +21,16 @@ public class PacketListener extends PacketListenerAbstract {
     public void onPacketSend(PacketSendEvent event) {
         if (event.getPacketType() == PacketType.Play.Server.SYSTEM_CHAT_MESSAGE) {
             WrapperPlayServerSystemChatMessage wrapper = new WrapperPlayServerSystemChatMessage(event);
-            Component message = wrapper.getMessage();
-
-            Component processedMessage = componentProcessor.process(message);
-            wrapper.setMessage(processedMessage);
+            wrapper.setMessage(componentProcessor.process(wrapper.getMessage()));
+        }
+        else if (event.getPacketType() == PacketType.Play.Server.DISGUISED_CHAT) {
+            WrapperPlayServerDisguisedChat wrapper = new WrapperPlayServerDisguisedChat(event);
+            wrapper.setMessage(componentProcessor.process(wrapper.getMessage()));
+        }
+        else if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
+            WrapperPlayServerChatMessage wrapper = new WrapperPlayServerChatMessage(event);
+            ChatMessage chatMessage = wrapper.getMessage();
+            chatMessage.setChatContent(componentProcessor.process(chatMessage.getChatContent()));
         }
     }
 }
