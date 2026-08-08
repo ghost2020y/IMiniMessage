@@ -31,15 +31,17 @@ java {
     disableAutoTargetJvm()
 }
 
-tasks.withType<JavaCompile>().configureEach {
-    options.encoding = "UTF-8"
-    options.release.set(targetJavaVersion)
-}
+tasks {
+    withType<JavaCompile>().configureEach {
+        options.encoding = "UTF-8"
+        options.release.set(targetJavaVersion)
+    }
 
-tasks.processResources {
-    filesMatching("plugin.yml") {
-        expand("version" to project.version)
+    processResources {
+        filesMatching("plugin.yml") {
+            expand("version" to project.version)
 
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        }
     }
 }
