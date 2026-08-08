@@ -8,7 +8,10 @@ import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ComponentProcessor {
@@ -18,6 +21,16 @@ public class ComponentProcessor {
     private final MiniMessage miniMessage;
 
     private static final Pattern TAG_PATTERN = Pattern.compile("<[^>]+>");
+    private static final int MAX_CACHE_SIZE = 512;
+
+    public final Map<String, Component> cache = Collections.synchronizedMap(
+            new LinkedHashMap<>(MAX_CACHE_SIZE, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(Map.Entry<String, Component> eldest) {
+                    return size() > MAX_CACHE_SIZE;
+                }
+            }
+    );
 
     public ComponentProcessor(ConfigManager configManager, LegacyConverter legacyConverter) {
         this.configManager = configManager;
@@ -30,7 +43,7 @@ public class ComponentProcessor {
         return processNode(component);
     }
 
-    private Component processNode(Component node) {
+    public Component processNode(Component node) {
         Component current = node;
         boolean isModifiedByMiniMessage = false;
 
@@ -44,7 +57,9 @@ public class ComponentProcessor {
 
                 boolean hasTags = TAG_PATTERN.matcher(content).find();
                 if (!configManager.isParseOnlyWithTags() || hasTags) {
-                    Component parsed = miniMessage.deserialize(content);
+
+                    Component parsed = cache.computeIfAbsent(content, miniMessage::deserialize);
+
                     Style mergedStyle = parsed.style().merge(textNode.style(), Style.Merge.Strategy.IF_ABSENT_ON_TARGET);
                     current = parsed.style(mergedStyle);
 

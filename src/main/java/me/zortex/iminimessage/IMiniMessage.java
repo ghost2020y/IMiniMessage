@@ -2,10 +2,11 @@ package me.zortex.iminimessage;
 
 import com.github.retrooper.packetevents.PacketEvents;
 import me.zortex.iminimessage.converter.LegacyConverter;
-import me.zortex.iminimessage.listener.PacketListener;
 import me.zortex.iminimessage.listener.ChatListener;
+import me.zortex.iminimessage.listener.PacketListener;
 import me.zortex.iminimessage.manager.ConfigManager;
 import me.zortex.iminimessage.processor.ComponentProcessor;
+import me.zortex.iminimessage.utils.VersionUtils;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class IMiniMessage extends JavaPlugin {
@@ -17,6 +18,26 @@ public final class IMiniMessage extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+
+        if (!VersionUtils.isPaper()) {
+            getLogger().severe("====================================================");
+            getLogger().severe("ERROR: Unsupported core detected!");
+            getLogger().severe("The IMiniMessage plugin is NOT supported on pure Spigot.");
+            getLogger().severe("Please use Paper or its forks (Purpur, Folia, etc.).");
+            getLogger().severe("====================================================");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
+        if (!VersionUtils.isSupportedVersion(1, 19, 4)) {
+            getLogger().severe("====================================================");
+            getLogger().severe("ERROR: Unsupported Minecraft version!");
+            getLogger().severe("IMiniMessage supports versions 1.19.4 and later.");
+            getLogger().severe("Current server version: " + getServer().getBukkitVersion());
+            getLogger().severe("====================================================");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
 
         if (!getServer().getPluginManager().isPluginEnabled("packetevents")) {
             getLogger().severe("====================================================");
