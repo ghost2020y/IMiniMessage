@@ -9,4 +9,8 @@ A Minecraft plugin that allows to use the MiniMessage format in any message with
 
 ## Features
 - High performance.
-- Use MiniMessage in chat.
+- Lightweight & Fast.
+- Use MiniMessage anywhere.
+
+## Permissions
+- **iminimessage.use** - Permission to use MiniMessage in chat.
