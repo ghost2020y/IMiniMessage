@@ -1,11 +1,25 @@
 name: IMiniMessage
 main: me.zortex.iminimessage.IMiniMessage
 version: ${version}
-api-version: 1.19
 authors: [ghost2020y]
+api-version: 1.19
 description: Global MiniMessage interceptor using PacketEvents
+folia-supported: true
 depend: [packetevents]
+
+commands:
+  imm:
+    description: Main command of the IMiniMessage plugin
+    permission: iminimessage.use
+    usage: /imm [reload]
+
 permissions:
   iminimessage.use:
-    description: Allows the player to use MiniMessage tags in chat.
+    description: Permission to use the command /imm
+    default: op
+  iminimessage.reload:
+    description: Permission to use the command /imm reload
+    default: op
+  iminimessage.chat.use:
+    description: Permission to use MiniMessage in chat.
     default: op

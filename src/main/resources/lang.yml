@@ -1,0 +1,6 @@
+no-permission: "<red>You do not have permissions.!</red>"
+reload-success: "<green>Configuration successfully reloaded!</green>"
+help-message: |
+  <gradient:#5e4fa2:#f7941d><bold>--- IMiniMessage Help ---</bold></gradient>
+  <gray>/imm</gray> <white>-</white> <yellow>Show this message</yellow>
+  <gray>/imm reload</gray> <white>-</white> <yellow>Reload plugin configuration</yellow>

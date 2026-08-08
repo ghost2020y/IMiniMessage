@@ -6,8 +6,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class ConfigManager {
 
     private final IMiniMessage plugin;
-    private boolean convertLegacy;
-    private boolean parseOnlyWithTags;
+    private volatile boolean convertLegacy;
+    private volatile boolean parseOnlyWithTags;
 
     public ConfigManager(IMiniMessage plugin) {
         this.plugin = plugin;

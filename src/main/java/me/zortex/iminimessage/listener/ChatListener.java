@@ -20,7 +20,7 @@ public class ChatListener implements Listener {
     public void onAsyncChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
 
-        if (player.hasPermission("iminimessage.use")) {
+        if (player.hasPermission("iminimessage.chat.use")) {
             Component originalMessage = event.message();
             Component processedMessage = componentProcessor.process(originalMessage);
             event.message(processedMessage);

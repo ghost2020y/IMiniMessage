@@ -16,7 +16,7 @@ dependencies {
     compileOnly("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 
-val targetJavaVersion = 17
+val targetJavaVersion = 21
 val buildJavaVersion = 25
 
 java {

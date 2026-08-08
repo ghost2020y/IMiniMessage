@@ -3,11 +3,13 @@ package me.zortex.iminimessage.listener;
 import com.github.retrooper.packetevents.event.PacketListenerAbstract;
 import com.github.retrooper.packetevents.event.PacketSendEvent;
 import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage;
+import com.github.retrooper.packetevents.protocol.chat.message.ChatMessage_v1_19_3;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerChatMessage;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerDisguisedChat;
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerSystemChatMessage;
 import me.zortex.iminimessage.processor.ComponentProcessor;
+import net.kyori.adventure.text.Component;
 
 public class PacketListener extends PacketListenerAbstract {
 
@@ -30,7 +32,13 @@ public class PacketListener extends PacketListenerAbstract {
         else if (event.getPacketType() == PacketType.Play.Server.CHAT_MESSAGE) {
             WrapperPlayServerChatMessage wrapper = new WrapperPlayServerChatMessage(event);
             ChatMessage chatMessage = wrapper.getMessage();
-            chatMessage.setChatContent(componentProcessor.process(chatMessage.getChatContent()));
+
+            if (chatMessage instanceof ChatMessage_v1_19_3 chatMessage193) {
+                Component contentToProcess = chatMessage193.getUnsignedChatContent()
+                        .orElseGet(chatMessage193::getChatContent);
+
+                chatMessage193.setUnsignedChatContent(componentProcessor.process(contentToProcess));
+            }
         }
     }
 }

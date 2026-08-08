@@ -19,6 +19,15 @@ public final class VersionUtils {
         }
     }
 
+    public static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     @SuppressWarnings("unused")
     public static boolean isSupportedVersion() {
         return isSupportedVersion(DEFAULT_MIN_MAJOR, DEFAULT_MIN_MINOR, DEFAULT_MIN_PATCH);

@@ -4,6 +4,8 @@ import me.zortex.iminimessage.converter.LegacyConverter;
 import me.zortex.iminimessage.manager.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
+import net.kyori.adventure.text.TranslationArgument;
 import net.kyori.adventure.text.format.Style;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
@@ -44,6 +46,8 @@ public class ComponentProcessor {
     }
 
     public Component processNode(Component node) {
+        if (node == null) return null;
+
         Component current = node;
         boolean isModifiedByMiniMessage = false;
 
@@ -57,14 +61,30 @@ public class ComponentProcessor {
 
                 boolean hasTags = TAG_PATTERN.matcher(content).find();
                 if (!configManager.isParseOnlyWithTags() || hasTags) {
-
                     Component parsed = cache.computeIfAbsent(content, miniMessage::deserialize);
-
                     Style mergedStyle = parsed.style().merge(textNode.style(), Style.Merge.Strategy.IF_ABSENT_ON_TARGET);
                     current = parsed.style(mergedStyle);
-
                     isModifiedByMiniMessage = true;
                 }
+            }
+        } else if (node instanceof TranslatableComponent translatableNode) {
+            List<TranslationArgument> newArgs = new ArrayList<>();
+            boolean argsModified = false;
+
+            for (TranslationArgument arg : translatableNode.arguments()) {
+                if (arg.value() instanceof Component argComponent) {
+                    Component processedArg = processNode(argComponent);
+                    if (processedArg != argComponent) {
+                        argsModified = true;
+                    }
+                    newArgs.add(TranslationArgument.component(processedArg));
+                } else {
+                    newArgs.add(arg);
+                }
+            }
+
+            if (argsModified) {
+                current = translatableNode.arguments(newArgs);
             }
         }
 
