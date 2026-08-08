@@ -16,7 +16,7 @@ public class ChatListener implements Listener {
         this.componentProcessor = componentProcessor;
     }
 
-    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onAsyncChat(AsyncChatEvent event) {
         Player player = event.getPlayer();
 
